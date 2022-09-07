@@ -10,7 +10,7 @@
 ### 3. Run command to install codeigniter 4 use composer below :
 
    
-   composer create-project codeigniter4/appstarter codeigniter4
+     composer create-project codeigniter4/appstarter codeigniter4
    
    
    The command above will create a “codeigniter4” folder.
@@ -20,7 +20,7 @@
 
 ### 4. Rename `env` to `.env`
 
-   chang CI_ENVIRONMENT = "production"  to CI_ENVIRONMENT = "production"
+   chang CI_ENVIRONMENT = "production"  to CI_ENVIRONMENT = "development"
    and tailor for your app, specifically the baseURL
    and any database settings.
    
@@ -52,7 +52,7 @@
    cd kube , and run command : 
    
    
-   kubectl apply -f ci4-secret.yaml
+      kubectl apply -f ci4-secret.yaml
    
    
 #### 10.2 Create ci4-mysql.yaml  ( pvc + service + deployment ) 
@@ -61,7 +61,7 @@
    <img width="706" alt="c9" src="https://user-images.githubusercontent.com/83863431/188613820-a5e6a7e1-f1d7-4708-8e34-1fd8f8fdfd7a.png">
    <img width="365" alt="c10" src="https://user-images.githubusercontent.com/83863431/188614098-5fee18f8-1903-4435-bcdf-4fef401fb0e5.png">
 
-   kubectl apply -f ci4-mysql.yaml
+      kubectl apply -f ci4-mysql.yaml
    
 
 #### 10.3 Create ci4-phpmyadmin.yaml  ( service + deployment )
@@ -70,24 +70,24 @@
    <img width="644" alt="c12" src="https://user-images.githubusercontent.com/83863431/188618119-b6e04bd1-0588-4499-a8cb-94bee69fb589.png">
    
 
-   kubectl apply -f ci4-phpmyadmin.yaml
+      kubectl apply -f ci4-phpmyadmin.yaml
    
    
 #### 10.4 Create php.yaml  ( deployment + service )
 
   <img width="710" alt="c7" src="https://user-images.githubusercontent.com/83863431/188612303-20eb389d-bc2a-49c6-aa4e-f9e166d7dc07.png">
 
-  kubectl apply -f php.yaml 
+     kubectl apply -f php.yaml 
   
   
   - check pod are running 
   
-  kubectl get pods 
+     kubectl get pods 
   
   
   - check service running
 
-  kubectl get svc
+     kubectl get svc
   
   
   <img width="739" alt="c13" src="https://user-images.githubusercontent.com/83863431/188622024-73ea4e69-85ea-4131-803b-ff4d0433dd52.png">
