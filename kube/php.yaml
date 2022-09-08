@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: ci4app
-        image: 127.0.0.1:5100/ci4-kubernetes:1.2
+        image: 127.0.0.1:5100/ci4-kubernetes:1.2 # your images name
         imagePullPolicy: Always
         resources:
           limits:

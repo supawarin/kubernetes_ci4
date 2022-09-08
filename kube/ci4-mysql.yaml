@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: ci4-pvc-db
   labels:
-    app: ci4-kubernetes
+    app: ci4app
 spec:
   accessModes:
   - ReadWriteOnce
@@ -19,14 +19,14 @@ kind: Service
 metadata:
   name: ci4-db # host
   labels:
-    app: ci4-kubernetes
+    app: ci4app
 spec:
   ports:
   - name: ci4-db
     port: 3306
     targetPort: 3306
   selector:
-    app: ci4-kubernetes
+    app: ci4app
     
 
 #mysql deployment
@@ -39,22 +39,20 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ci4-kubernetes
-      
+      app: ci4app      
   strategy:
     type: Recreate
   template: 
     metadata: 
       labels: 
-        app: ci4-kubernetes
-        
+        app: ci4app        
     spec:
       containers:
        - image: mariadb:latest
          name: ci4-mysql
          env:
          - name: MYSQL_DATABASE_HOST
-           value: "ci4-kubernetes"
+           value: "ci4-db"
          - name: MYSQL_ROOT_PASSWORD
            valueFrom:
             secretKeyRef:
