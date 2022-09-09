@@ -1,0 +1,66 @@
+#mysql deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: ci4-db-{{ .Values.env }}
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ci4-{{ .Values.env }}     
+  strategy:
+    type: Recreate
+  template: 
+    metadata: 
+      labels: 
+        app: ci4-{{ .Values.env }}     
+    spec:
+      containers:
+       - image: mariadb:latest
+         name: ci4-db-{{ .Values.env }}
+         env:
+         - name: MYSQL_DATABASE_HOST
+           value: ci4-db-{{ .Values.env }}
+         - name: MYSQL_ROOT_PASSWORD
+           value: {{ .Values.password }}
+         - name: MYSQL_DATABASE
+           value:  {{ .Values.database }}   
+         - name: MYSQL_USER
+           value: {{ .Values.user }} 
+         
+         ports:
+         - containerPort: 3306
+           name: ci4-db-{{ .Values.env }}
+           protocol: TCP
+         volumeMounts:
+         - name: ci4-volume-claim
+           mountPath: /var/lib/mysql
+      volumes:
+      - name: ci4-volume-claim
+        persistentVolumeClaim:
+          claimName: ci4-claim-db-{{ .Values.env }}
+
+# ci4 deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ci4-{{ .Values.env }} 
+spec:
+  selector:
+    matchLabels:
+      app: ci4-{{ .Values.env }} 
+  template:
+    metadata:
+      labels:
+        app: ci4-{{ .Values.env }} 
+    spec:
+      containers:
+      - name: ci4-{{ .Values.env }} 
+        image: 127.0.0.1:5100/ci4-kubernetes:1.2 # your images name
+        imagePullPolicy: Always
+      
+        ports:
+        - containerPort: 80
+
