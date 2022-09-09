@@ -50,17 +50,18 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: ci4-{{ .Values.env }} 
+      app: ci4-{{ .Values.env }}
+      tier: frontend     
   template:
     metadata:
       labels:
-        app: ci4-{{ .Values.env }} 
+        app: ci4-{{ .Values.env }}
+        tier: frontend             
     spec:
       containers:
       - name: ci4-{{ .Values.env }} 
         image: 127.0.0.1:5100/ci4-kubernetes:1.2 # your images name
         imagePullPolicy: Always
-      
         ports:
         - containerPort: 80
 

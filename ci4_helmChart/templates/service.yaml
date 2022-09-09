@@ -15,7 +15,6 @@ spec:
     nodePort: {{ .Values.svcAccessPort }}
     protocol: TCP
   type: NodePort 
-
 ---
 #mysql service
 apiVersion: v1
