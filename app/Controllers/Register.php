@@ -3,7 +3,7 @@
 use CodeIgniter\Controller;
 use App\Models\UserModel;
 
-use App\Libraries\Hash;
+##use App\Libraries\Hash;
 
 class Register extends Controller {
 
@@ -24,80 +24,35 @@ class Register extends Controller {
 
     }
 
-    
-
-    
-
     public function save()
     {
-        // Validate user input
-        $validated = $this->validate([
-            'name'=> [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Your name is required',
-                ]
-            ],
-            'email'=> [
-                'rules' => 'required|valid_email',
-                'errors' => [
-                    'required' => 'Your email is required',
-                    'valid_email' => 'Email is already used.',
-                ]
-            ],
-            'password'=> [
-                'rules' => 'required|min_length[5]|max_length[20]',
-                'errors' => [
-                    'required' => 'Your password is required',
-                    'min_length' => 'Password must be 5 charectars long',
-                    'max_length' => 'Password cannot be longer than 20 charectars',
-                ]
-            ],
-            'confpassword'=> [
-                'rules' => 'required|min_length[5]|max_length[20]|matches[password]',
-                'errors' => [
-                    'required' => 'Your confirm password is required',
-                    'min_length' => 'Password must be 5 charectars long',
-                    'max_length' => 'Password cannot be longer than 20 charectars',
-                    'matches' => 'Confirm password must match the password',
-                ]
-            ],
-        ]);
-
-        if(!$validated)
-        {
-            return view('/register', ['validation' => $this->validator]);
-        }
-
-        // Here we save the user.
-
-        $name = $this->request->getPost('name');
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-        $confpassword = $this->request->getPost('confpassword');
-
-        $data = [
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::encrypt($password)
+        // include helper form
+        helper(['form']);
+        // set rules validation form
+        $rules = [
+            'name' => 'required|min_length[3]|max_length[20]',
+            'email' => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.user_email]',
+            'password' => 'required|min_length[6]|max_length[200]',
+            'confpassword' => 'matches[password]',
         ];
-
-        // Storing data
-         
-        $userModel = new \App\Models\UserModel();
-        $query = $userModel->insert($data);
-        
-
-        if(!$query)
-        {
-            return redirect()->back()->with('fail', 'Saving user failed');
-        }
-        else
-        {
-            #return redirect()->back()->with('success', 'Registered successfully');
-            return redirect()->to('/login')->with('success', 'Registered successfully');
+        if ($this->validate($rules)) {
+            $model = new UserModel();
+            $data = [
+                'user_name' => $this->request->getVar('name'),
+                'user_email' => $this->request->getVar('email'),
+                'user_password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT), 
+            ];
+            $model->save($data);
+            return redirect()->to('/login');
+        } else {
+            $data['validation'] = $this->validator;
+            echo view('register', $data);
         }
     }
+
+    
+
+    
         
 }
 

@@ -6,5 +6,5 @@ class UserModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'users';
-    protected $allowedFields    = ['name', 'email', 'password'];
+    protected $allowedFields    = ['user_name', 'user_email', 'user_password', 'user_created_at'];
 }

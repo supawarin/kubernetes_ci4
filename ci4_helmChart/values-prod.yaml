@@ -1,4 +1,4 @@
-env: dev
+env: prod
 
 # ports
 svcAccessPort: 31177

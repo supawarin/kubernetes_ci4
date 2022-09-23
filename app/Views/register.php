@@ -29,27 +29,9 @@
             <div class="col-md-6">
                 <h1>Sign Up</h1>
                 <hr>
-                <?php
-                    if(!empty(session()->getFlashData('success'))){
-                        ?>
-                           <div class="alert alert-success">
-                               <?=
-                                  session()->getFlashData('success')
-                                ?>
-                           </div>
-
-                        <?php
-                    }else if(!empty(session()->getFlashData('fail'))){
-                        ?>
-                           <div class="alert alert-danger">
-                               <?=
-                                 session()->getFlashData('fail')
-                               ?>
-                           </div>
-
-                        <?php
-                    }
-                ?>
+                <?php if(isset($validation)): ?>
+                  <div class="alert alert-danger"><?= $validation->listErrors(); ?></div>
+                <?php endif; ?>
                 
                 <form action="/register/save" 
                       method="post"
@@ -62,7 +44,7 @@
                                name="name" 
                                class="form-control" 
                                id="inputforname" 
-                               placeholder="Name Here"
+                               placeholder="Your Name "
                                value="<?= set_value('name'); ?>" >
                         <span class="text-danger text-sm">
                             <?= isset($validation) ? display_form_errors($validation, 'name') : '' ?>

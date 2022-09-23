@@ -28,12 +28,12 @@
             <div class="col-md-6">
                 <h1>Login</h1>
                 <hr>
-                <?php if(session()->getFlashdata('success')): ?>
-                      <div class="alert alert-success"><?= session()->getFlashdata('success'); ?></div>
+                <?php if(session()->getFlashdata('msg')): ?>
+                      <div class="alert alert-success"><?= session()->getFlashdata('msg'); ?></div>
                 <?php endif; ?>
 
                 
-                <form action="/login/loginUser" method="post" class="form mb-3">
+                <form action="/login/auth" method="post" class="form mb-3">
                   <?= csrf_field(); ?>
                     
                     <div class="mb-3">
@@ -42,7 +42,7 @@
                                name="email" 
                                class="form-control" 
                                id="inputforemail" 
-                               placeholder=" Email Here"
+                               placeholder=" Your Email "
                                value="<?= set_value('email'); ?>" >
                         <span class="text-danger text-sm">
                             <?= isset($validation) ? display_form_errors($validation, 'email') : '' ?>
@@ -54,7 +54,7 @@
                                name="password" 
                                class="form-control" 
                                id="inputforpassword" 
-                               placeholder=" Email Here">
+                               placeholder=" Your Password">
                         <span class="text-danger text-sm">
                             <?= isset($validation) ? display_form_errors($validation, 'password') : '' ?>
                         </span>

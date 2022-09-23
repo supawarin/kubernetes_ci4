@@ -2,7 +2,7 @@
 
 use CodeIgniter\Controller;
 use App\Models\UserModel;
-use App\Libraries\Hash;
+##use App\Libraries\Hash;
 
 class Login extends Controller {
     public function index() {
@@ -12,61 +12,40 @@ class Login extends Controller {
         
     }
 
-    public function loginUser() {
-
-        // Validate user input
-        $validated = $this->validate([
-            
-            'email'=> [
-                'rules' => 'required|valid_email',
-                'errors' => [
-                    'required' => 'Your email is required',
-                    'valid_email' => 'Email is already used.',
-                ]
-            ],
-            'password'=> [
-                'rules' => 'required|min_length[5]|max_length[20]',
-                'errors' => [
-                    'required' => 'Your password is required',
-                    'min_length' => 'Password must be 5 charectars long',
-                    'max_length' => 'Password cannot be longer than 20 charectars',
-                ]
-            ],
-            
-        ]);
-
-        if(!$validated)
-        {
-            return view('/login', ['validation' => $this->validator]);
-        }
-        else {
-            // checking user details in database.
-            $email = $this->request->getPost('email');
-            $password = $this->request->getPost('password');
-
-            $userModel = new UserModel();
-            $userInfo = $userModel->where('email', $email)->first();
-
-            $checkPassword = Hash::check($password, $userInfo['password']);
-
-            if(!$checkPassword)
-            {
-                session()->setFlashdata('fail', 'Incorrect password provided');
+    public function auth() {
+        $session = session();
+        $model = new UserModel();
+        $email = $this->request->getVar('email');
+        $password = $this->request->getVar('password');
+        $data = $model->where('user_email', $email)->first();
+        if ($data) {
+            $pass = $data['user_password'];
+            $verify_password = password_verify($password, $pass);
+            if ($verify_password) {
+                $ses_data = [
+                    'user_id' => $data['user_id'],
+                    'user_name' => $data['user_name'],
+                    'user_email' => $data['user_email'],
+                    'logged_in' => TRUE
+                ];
+                $session->set($ses_data);
+                return redirect()->to('/dashboard');
+            } else {
+                $session->setFlashdata('msg', 'Wrong password');
                 return redirect()->to('/login');
             }
-            else
-            {
-                // Proces user info.
-                $userId = $userInfo['id'];
-
-                session()->set('loggedInUser', $userId);
-                return redirect()->to('/dashboard');
-            }
+        } else {
+            $session->setFlashdata('msg', 'Email not found');
+            return redirect()->to('/login');
         }
     }
 
+    public function logout() {
+        $session = sesstion();
+        $session->destroy();
+        return redirect()->to('/login');
+    }
 
-
-
+    
 
 }
